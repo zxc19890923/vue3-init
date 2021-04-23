@@ -1,11 +1,11 @@
 <template>
   <div class="hello">
     <el-radio v-model="state.register">选择</el-radio>
-    <el-button type="primary">主要按钮</el-button>
+    <el-button type="primary" @click="changeVal()">开启更新</el-button>
     <h2>
-      {{state.loginState}}
+      <span>张旭超</span>{{state.loginState}}
     </h2>
-    <h1 @click="changeVal">{{ msg }}</h1>
+    <h1>{{ msg }}</h1>
   </div>
 </template>
 <script>
@@ -48,18 +48,10 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+h2 {
+  color: blue !important;
+  span {
+    color: green;
+  }
 }
 </style>

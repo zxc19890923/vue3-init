@@ -1,5 +1,5 @@
 // 封装后台接口方法
-import { get, post, put, del, uploader } from './http'
+import { get, post, put, del, uploader } from '@/http/http.js'
 export const LOGIN = (params) => get('service-core/wechat/serviceAccount/qrCode/create', params, false)
 export const REGISTER = (params) => put('service-core/user_register', params, false)
 export const USER_LIST = (params) => post('service-core/user_list', params)

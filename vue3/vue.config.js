@@ -1,3 +1,7 @@
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// 别名需要的变量
+const path =  require('path')
+const resolve = (dir) => path.join(__dirname, dir)
 module.exports = {
   // 基本路径
   publicPath: './',
@@ -22,11 +26,41 @@ module.exports = {
   // 在生成的 HTML 中的 <link rel='stylesheet'> 和 <script> 标签上启用 Subresource Integrity (SRI)。
   integrity: false,
   // 调整内部的 webpack 配置
-  configureWebpack: () => {}, //(Object | Function)
-  chainWebpack: () => {},
+  configureWebpack: (config) => {
+    // 防止将某些 import 的包(package)打包到 bundle 中，而是在运行时(runtime)再去从外部获取这些扩展依赖
+    config.externals = {
+      // 'vue': 'Vue',
+      // 'element-plus': 'ELEMENT',
+      // 'vue-router': 'VueRouter',
+      // 'vuex': 'Vuex',
+      // 'axios': 'axios'
+    }
+  },
+  chainWebpack: (config) => {
+    // 添加别名
+    config.resolve.alias
+      .set('@', resolve('src'))
+      .set('assets', resolve('src/assets'))
+      .set('components', resolve('src/components'))
+      .set('static', resolve('src/static'))
+    // 修复HMR, 热更新
+    config.resolve.symlinks(true)
+    // 打包分析
+    if (process.env.IS_ANALYZ) {
+      config.plugin('webpack-report')
+        .use(BundleAnalyzerPlugin, [{
+          analyzerMode: 'static',
+        }])
+    }
+  },
   // 配置 webpack-dev-server 行为。
   devServer: {
-    open: process.platform === 'darwin',
+    hot: true,
+    // webpack4.0 开启热更新
+		disableHostCheck: true,
+    // 压缩
+    compress: true,
+    open: true,
     host: '0.0.0.0',
     port: 8080,
     https: true,
@@ -48,8 +82,24 @@ module.exports = {
       }
     }
   },
+  css: {
+    // css 分离插件
+    // extract: true,
+    requireModuleExtension: true,
+    // css sourceMap
+    sourceMap: true,
+    loaderOptions: {
+      sass: {
+        // 向全局sass样式传入共享的全局变量
+        // data: `@import "~assets/scss/variables.scss";$src: "${process.env.VUE_APP_SRC}";`
+      }
+    }
+  },
   // 三方插件的选项
   pluginOptions: {
-    // ...
+    'style-resources-loader': {
+      preProcessor: 'scss',
+      patterns: []
+    }
   }
 }
