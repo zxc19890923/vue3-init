@@ -1,5 +1,7 @@
 <template>
   <div class="hello">
+    <el-radio v-model="state.register">选择</el-radio>
+    <el-button type="primary">主要按钮</el-button>
     <h2>
       {{state.loginState}}
     </h2>
@@ -8,7 +10,9 @@
 </template>
 <script>
 import { onMounted, reactive } from 'vue'
+// 导入vuex
 import { useStore } from 'vuex'
+// 导入定义的接口
 import { LOGIN } from '../http/api'
 export default {
   name: 'HelloWorld',
@@ -18,7 +22,8 @@ export default {
   setup () {
     // 定义响应式变量
     const state = reactive({
-      loginState: 1
+      loginState: 1,
+      register: false
     })
     // 使用vuex
     const store = useStore()
